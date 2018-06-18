@@ -4,16 +4,6 @@ import datetime
 from Preprint import Preprint
 from api_token import osf_token
 
-def countKeywords(keywords, hydro, seis, week):
-        if ("Hydrology" in keywords):
-                if week in hydro:
-                        hydro[week] += 1
-                else: hydro[week] = 1
-        if ("Geophysics and Seismology" in keywords):
-                if week in seis:
-                        seis[week] += 1
-                else: seis[week] = 1
-                
 def printResults(d):
         keylist = sorted(d.keys())
         for key in keylist: print(key,d[key])
@@ -67,10 +57,6 @@ else:
 
 s2017 = {}
 s2018 = {}
-hydrology2017 = {}
-hydrology2018 = {}
-seismology2017 = {}
-seismology2018 = {}
 
 # Loop over all the preprints we found
 for preprint in preprints:
@@ -87,19 +73,11 @@ for preprint in preprints:
                         if week in s2017:
                                 s2017[week] = s2017[week]+1
                         else: s2017[week] = 1
-                        countKeywords(keywords, hydrology2017, seismology2017, week)
                 if year == 2018:
                         if week in s2018:
                                 s2018[week] = s2018[week]+1
                         else: s2018[week] = 1
-                        countKeywords(keywords, hydrology2018, seismology2018, week)
 
 print("Weekly submissions")
 printResults(s2017)
 printResults(s2018)
-print("Hydrology submissions")
-printResults(hydrology2017)
-printResults(hydrology2018)
-print("Seismology submissions")
-printResults(seismology2017)
-printResults(seismology2018)
