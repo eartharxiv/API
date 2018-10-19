@@ -6,7 +6,22 @@ from Preprint import Preprint
 # Helper function to download a file from a URL
 def download( url, localFile ):
 	
-	response = urllib.request.urlretrieve(url, localFile)
+	error = False
+	message = ""
+
+	try:
+		response = urllib.request.urlretrieve(url, localFile)
+	except urllib.error.URLError:
+		error = True
+		message = "URL Error"	
+	except urllib.error.HTTPError:
+		error = True
+		message = "HTTP Error"
+	except urllib.error.ContentTooShortError:
+		error = True
+		message = "Content Too Short Error"
+
+	return error, message
 
 # Generic function to send a query to the API
 def queryAPI( url, headers ):
@@ -19,6 +34,17 @@ def getJSON( response ):
 
 	json_object = json.loads(response.content.decode('utf-8'))
 	return json_object
+
+# Helper function to parse JSON response and look for citation data
+def parseCitation ( jsonData, preprint ):
+	
+	data = jsonData['data']['attributes'] 
+	preprint.title = data['title'] 
+	for a in range( len(data['author']) ):
+		given = data['author'][a]['given']
+		family = data['author'][a]['family']
+		name = given.strip() + " " + family.strip()
+		preprint.authors.append(name)
 
 # Helper function to parse JSON response and look for identifier data
 def parseIdentifier ( jsonData, preprint ):
@@ -39,9 +65,8 @@ def parsePreprints( preprints, json_object, headers, verbose=True ):
 		rel = json_object['data'][i]['relationships']
 		attr = json_object['data'][i]['attributes']
 
-		# We're going to ignore 'links' as we can construct these ourselves
-		# from the id - API provides us with html, download, and doi links
-		# links = json_object['data'][i]['links']
+		# Links contains references to peer reviewed paper (if available) 
+		links = json_object['data'][i]['links']
 		
 		# Also need to extract scalar values like id and construct the download link
 		id = json_object['data'][i]['id']
@@ -75,8 +100,12 @@ def parsePreprints( preprints, json_object, headers, verbose=True ):
 		response2 = queryAPI( preprint.citationLink, headers )
 		if response2.status_code == 200:
 			json_object2 = getJSON( response2 )
+			parseCitation( json_object2, preprint )
 		else:
 			print( "Error parsing Citation Link, HTTP status code is: ", response2.status_code )
+
+		# Parse the Links to look for peer reviewed version of paper
+		preprint.parseLinkData( links )		
 
 		# Add the current preprint to our list of preprints
 		preprints.append( preprint )
