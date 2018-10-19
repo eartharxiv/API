@@ -49,31 +49,7 @@ log = downloadDir + provider + '.log'
 # get the papers
 preprints = callOsfApi(provider, startDate, verbose)
 
-# read the existing log to get a list of papers we've already seen 
-#loggedPreprints = []
-#l = open(log, 'r')
-#for line in l:
-#   p = Preprint()
-#   parts = line.split(sep1)
-#   p.identifier = parts[0].strip()
-#   p.preprintProvider = parts[1].strip()
-#   p.doi = parts[2].strip()
-#   p.peer_review_doi = parts[3].strip()
-#   p.date_published = parts[4].strip()
-#   p.peer_review_publish_date = parts[5].strip()
-#   p.title = parts[6].strip()
-#   authorText = parts[7].strip() 
-#   authors = authorText.split(':')
-#   keywordText = parts[8].strip()
-#   keywords = keywordText.split(':') 
-#   for a in authors:
-#      p.authors.append(a.strip())
-#   for k in keywords:
-#      p.keywords.add(k.strip()) # this is a set, not a list
-#   loggedPreprints.append(p)
-#l.close()
-
-# overwrite the log files 
+# open log files for writing 
 l = open(log, 'w')
 l2 = open(peerReviewLog, 'w')
 
@@ -108,7 +84,6 @@ for preprint in preprints:
       #  loggedPreprints.append( preprint ) 
 
       # write to the log file
-#for p in loggedPreprints:
 
       # remove the seperator from the title or else we'll have trouble reading back the logs
       title = preprint.title.replace(s1," ")
