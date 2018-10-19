@@ -9,7 +9,6 @@ osf_token = "BLAH"
 ```
 where BLAH should be replaced with your token. The code will import api_token.py and reference osf_token when making calls to the API.
 
-TO DO
+Overview
 ---------
-
-Please note, this code is currently very preliminary and only used for testing. It does not (yet) extract all values returned from the API. Development will continue over the next few weeks and the code may be updated often. 
+This code creates two log files, downloads available preprints, and creates a text file for each preprint containing the preprint abstract. One log file contains metadata on available preprints, such as authors, keywords, title, publication date, etc. The other log file contains metadata on peer-reviewed papers associated with preprints. This log file contains similar metadata as that of the preprints: e.g. authors, title, publication date, journal, etc. The EarthArXiv preprint identifier is used in both log files and provides a means a linking preprints to their peer-reviewed papers.
