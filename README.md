@@ -21,3 +21,5 @@ Peer-review log has the form:
 
 preprint identifier; preprint provider; peer review doi; peer review date published; peer review journal; peer review title; peer review author list; peer review publisher; peer review url 
 
+[![DOI](https://zenodo.org/badge/113208059.svg)](https://zenodo.org/badge/latestdoi/113208059)
+
